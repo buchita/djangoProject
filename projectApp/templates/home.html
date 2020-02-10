@@ -3,10 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
-</head>
-<body>
-<h1> TESTINNNNNNNNNNNG</h1>
+{#    {% load staticfiles %} <!-- Prepare django to load static files -->#}
 
-<p>Yo, {{ login }}</p>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="index.css">
+
+</head>
+<!-- for scrolling and the navbar is keeping track-->
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<div class="container">
+
+<!--navbar, set the default navbar with fixed position at the top-->
+	<nav class="navbar navbar-default navbar-fixed-top">
+	 	<div class="container-fluid">
+	 		<!-- small button -->
+	 		<div class="navbar-header">
+	 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynavbar">
+	 				<span class="icon-bar"></span>
+	 				<span class="icon-bar"></span>
+	 				<span class="icon-bar"></span>
+	 			</button>
+	 			<a class="navbar-brand" href="#">Flowerify</a>
+
+	 		</div>
+	 		<!-- web browser-->
+	 		<div class="collapse navbar-collapse" id="mynavbar">
+
+			    <ul class="nav navbar-nav navbar-right">
+			    	<li><a href="#home">HOME<span class="glyphicon glyphicon-grain"></span></a></li>
+			        <li><a href="#about">ABOUT<span class="glyphicon glyphicon-leaf"></span></a></li>
+			        <li><a href="#flower">FLOWER<span class="glyphicon glyphicon-ice-lolly-tasted"></span></a></li>
+			        <li><a href="#contact">CONTACT<span class="glyphicon glyphicon-earphone"></span></a></li>
+			        <li><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>
+			        <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
+			        <li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>
+
+
+			    </ul>
+		   	</div>
+	  	</div>
+	</nav>
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+
+
+
+
+    <div class="container" id="home" >
+
+		<img alt="it is not working" id="pic" src="headerPic.jpg" width="100%">
+{#        <img alt="errrroor" src={% static "headerPic.jpg" %} >#}
+
+		<!-- name of the store-->
+		<div class="jumbotron" style="background-color: lavender">
+
+			<h1>Flowerify</h1>
+		</div>
+
+		<!-- about section starts-->
+		<div class="jumbotron" id="about" style="background-color: lavenderblush;">
+			<h2 ><mark>About</mark></h2>
+            <p>Yo, {{ login }}
+                <br>
+                Flowerify is a web application that enables a user to input an image of a flower. The proposed system will upload, process and analyse the image and output the name and general care information for the identified flower with reference to a known database. The preprocessing and classification task will be undertaken using python Keras.   The proposed app will also aid in the maintenance and upkeep of the flower such as when and where to plant this flower; possible pests and diseases.   The aim of the app ‘Flowerify’ is to help users to detect, recognise and understand flowers. The author plans to accomplish this by providing a platform for users to upload, process and analyse the flower image.
+
+                The recommender system will also be implemented in this application for recommending similar flowers to the user input flower.
+
+                For Flowerify to be an intuitive web app beneficial to users from all backgrounds, the further objectives of the project are to create a visually appealing and effective user interface.
+            </p>
+
+        </div>
+		<br>
+    </div>
+
+</div>
 </body>
 </html>
