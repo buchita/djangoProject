@@ -8,3 +8,8 @@ def home(request):
 
     return render(request, 'home.html',
                   {'login': current_user})
+
+def daisyInformation(request):
+    # return HttpResponse(index_home)
+
+    return render(request, 'daisyInformation.html')

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
-{#    {% load staticfiles %} <!-- Prepare django to load static files -->#}
+    {% load static %} <!-- Prepare django to load static files -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="index.css">
+{#	<link rel="stylesheet" type="text/css" href="/static/index.css">#}
+	<link rel="stylesheet" type="text/css" href="{% static 'index.css' %}/">
 
 </head>
 <!-- for scrolling and the navbar is keeping track-->
@@ -58,8 +59,8 @@
 
     <div class="container" id="home" >
 
-		<img alt="it is not working" id="pic" src="headerPic.jpg" width="100%">
-{#        <img alt="errrroor" src={% static "headerPic.jpg" %} >#}
+{#		<img alt="it is not working" id="pic" src="headerPic.jpg" width="100%">#}
+        <img id="HeaderPic" alt="Header" src={% static "headerPic.jpg" %} >
 
 		<!-- name of the store-->
 		<div class="jumbotron" style="background-color: lavender">
@@ -82,6 +83,67 @@
         </div>
 		<br>
     </div>
+
+    <div class="container-fluid" id="flower">
+
+
+			<h2 ><mark>Flower</mark></h2>
+			<!-- start the menu. no style for the list-->
+				<ul class="list-unstyled" id="myList"><div class="row text-center">
+
+					<!-- set the menu to be half ie 6-->
+					<li><div class="col-sm-6" style="background-color: #D8C0F1;">
+
+						<!-- declare card -->
+						<div class="card sm-6 box-shadow">
+
+							<!-- img at the top of the card-->
+							<img class="card-imag-top" src="{% static "daisy.jpg" %}">
+
+							<!-- start the card body-->
+							<div class="card-body">
+
+								<h3 class="card-title">Barbeton Daisy <span class="badge badge-pill badge-danger"style="background-color: red;">NEW</span></h3>
+
+{#								<p class="card-text">Information about flower</p>#}
+
+								<a target="_self" href="{%  url 'daisyInformation' %}" class="btn btn-light" role="button" style="background-color: orange;">View</a>
+
+								<br>
+								<br>
+
+
+							</div><!-- end card body-->
+						</div><!-- end card-->
+					</div></li><!-- end half -->
+
+
+
+					<!-- 2 -->
+					<!-- set the menu to be half ie 6-->
+					<div class="col-sm-6" style="background-color: #F1CE71;">
+
+						<!-- declare card -->
+						<div class="card sm-6 box-shadow">
+
+							<!-- img at the top of the card-->
+							<img class="card-imag-top" src="{%  static "Anthurium.jpg" %}">
+
+							<!-- start the card body-->
+							<div class="card-body">
+
+								<h3 class="card-title">Anthurium</h3>
+
+{#								<p class="card-text">View</p>#}
+
+
+								<a target="_self" href="#" class="btn btn-light" role="button" style="background-color: orange;">View</a>
+								<br>
+								<br>
+
+							</div><!-- end card body-->
+						</div><!-- end card-->
+
 
 </div>
 </body>

@@ -58,3 +58,15 @@ mark
     border-bottom-right-radius:5px;
 }
 
+#HeaderPic
+{
+    width: 100%;
+    height: 100%;
+}
+
+.card-imag-top
+{
+    width: 50%;
+    height: 50%;
+
+}
