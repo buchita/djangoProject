@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 # from projectApp.templates.form import UserForm
 from projectApp.models import Flower
+from djangoProject import settings
+import base64
 
 def home(request):
     current_user = "Thomas"
@@ -38,8 +40,37 @@ def home(request):
 
 def DaisyInformation(request):
     # return HttpResponse(index_home)
+    # https: // stackoverflow.com / questions / 56138525 / how - to - show - a - blob - image - on - html - page - in -django
+    obj = Flower.objects.get(id=1)
+    # obj = Flower.objects.all()
+    image_data = base64.b64encode(obj.img).decode()
 
-    return render(request, 'daisyInformation.html')
+    data = {
+        'caption': obj.caption,
+        'flowerName': obj.flowerName,
+        'image': image_data
+    }
+    # flowers = Flower.objects.all()
+    return render(request, 'daisyInformation.html', data)
+
+
+def BeardIrisInformation(request):
+    # return HttpResponse(index_home)
+    # https: // stackoverflow.com / questions / 56138525 / how - to - show - a - blob - image - on - html - page - in -django
+    obj = Flower.objects.get(id=2)
+    # obj = Flower.objects.all()
+    image_data = base64.b64encode(obj.img).decode()
+
+    data = {
+        'caption': obj.caption,
+        'flowerName': obj.flowerName,
+        'image': image_data
+    }
+    # flowers = Flower.objects.all()
+    return render(request, 'beardediris.html', data)
+
+
+
 
 def readDB(request):
     flowers = Flower.objects.all()

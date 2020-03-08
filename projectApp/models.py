@@ -1,6 +1,9 @@
 from django.db import models
 # from django.db import ModelForm, Textarea
+import base64
 
+# class BlobImg(models.Model):
+#     photo = models.TextField(null=True)
 
 class Flower(models.Model):
     # id = models.CharField(max_length=3)
@@ -8,7 +11,22 @@ class Flower(models.Model):
     caption = models.CharField(max_length=100, default='')
     flowerName = models.CharField(max_length=100)
     # id = models.IntegerField(default=0)
-    img = models.ImageField(upload_to='images/', default='')
+
+    # img = models.ImageField(upload_to='flower_folder', default='')
+    # blob
+    img = models.TextField(null=True)
+
+    #------------------------------------
+    # converting blob to base 64
+    # _img = models.TextField(db_column='image', blank=True)
+    # def set_data(self, data):
+    #     self._img = base64.encodebytes(data)
+    #
+    # def get_data(self, data):
+    #     return base64.decodebytes(self._img)
+    # img = property(get_data, set_data)
+
+    # ------------------
     # def __init__(self):
     #     return self.description
 
@@ -19,3 +37,4 @@ class Flower(models.Model):
         #return self.description
 
         return self.flowerName
+
