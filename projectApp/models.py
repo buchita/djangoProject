@@ -1,6 +1,4 @@
 from django.db import models
-# from django.db import ModelForm, Textarea
-import base64
 
 # class BlobImg(models.Model):
 #     photo = models.TextField(null=True)
@@ -37,4 +35,6 @@ class Flower(models.Model):
         #return self.description
 
         return self.flowerName
+
+
 
