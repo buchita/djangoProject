@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from projectApp import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
 
 
@@ -23,7 +27,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('projectApp.urls')),
     path("daisy/", views.DaisyInformation, name="daisyInformation"),
-    # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
-    path("viewflower/", views.readDB, name="readfromDB")
+    path("beardediris/", views.BeardIrisInformation, name="beardedirisInformation"),
 
-]
+                  # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
+    # path("viewflower/", views.readDB, name="readfromDB")
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
