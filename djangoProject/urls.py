@@ -28,10 +28,12 @@ urlpatterns = [
     path('', include('projectApp.urls')),
     path("daisy/", views.DaisyInformation, name="daisyInformation"),
     path("beardediris/", views.BeardIrisInformation, name="beardedirisInformation"),
+    path('form/', views.upload_file, name="uploader"),
+    path('display/', views.retrieveimage, name="display"),
 
-                  # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
+    # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
     # path("viewflower/", views.readDB, name="readfromDB")
 
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

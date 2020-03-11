@@ -38,7 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'projectApp.apps.ProjectappConfig',
+
+
+    # 'crispy_forms', # for file uploader crispy-forms
+
+
 ]
+# file uploader
+# CRISPY_TEMPLATE_PACK = 'uni_form'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
