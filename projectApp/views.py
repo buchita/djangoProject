@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 # from projectApp.templates.form import UserForm
-from projectApp.models import Flower
-from .form import Image_uploader
+from projectApp.models import Flower, ImageForm
+from .form import DocumentForm
+from django.urls import reverse
+
 
 from djangoProject import settings
 import base64
@@ -34,33 +36,45 @@ def home(request):
         key = "key" + '_' + str(index)
         data_dict[key] = x
         index = index + 1
-
-
-
     return render(request, 'home.html',
                   data_dict)
 
-# write to db
+
+# write to db - upload an image
 def upload_file(request):
     # return HttpResponse(index_home)
-# https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
+    # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
     # creates a request for POST
     if request.method == "POST":
-        form = Image_uploader(request.POST, request.FILES)
+        form = DocumentForm(request.POST, request.FILES)
 
         # form is validated
-        if form.is_valid():
-            try:
-                # form is saved
-                form.save()
-                # then redirected to /view
-                return redirect('home')
-            except:
-                pass
+        # if form.is_valid():
+        try:
+            newdoc = ImageForm(file=request.FILES['file'])
+            # form is saved
+            newdoc.save()
+            # # then redirected to /view ---this is not workign
+            return HttpResponseRedirect(reverse('uploader'))
+        except:
+            pass
     # if something is wrong, will be directed back to html page
     else:
-        form = Image_uploader()
-        return render(request, 'uploader.html', {'form': form})
+        # empty
+        form = DocumentForm()
+
+    # Load documents for the list page
+    documents = ImageForm.objects.all()
+    return render(request, 'uploader.html', {'documents': documents, 'form': form})
+    # return render(request, 'home.html', {'form': form})
+
+
+
+def retrieveimage(request):
+    # Load documents for the list page
+    documents = ImageForm.objects.all()
+    return render(request, 'display.html', {'documents': documents})
+
 
 
 def DaisyInformation(request):
@@ -96,8 +110,8 @@ def BeardIrisInformation(request):
 
 
 
-
-def readDB(request):
-    flowers = Flower.objects.all()
-    return render(request, 'display.html', {'flowers': flowers})
-
+#
+# def readDB(request):
+#     flowers = Flower.objects.all()
+#     return render(request, 'display.html', {'flowers': flowers})
+#

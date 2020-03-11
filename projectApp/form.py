@@ -1,12 +1,17 @@
 from django.db import models
+from django import forms
+from projectApp.models import ImageForm
 
 
-# file uploader
-class Image_uploader(models.Model):
-    file = models.ImageField(upload_to='images/')
+class DocumentForm(forms.Form):
+    file = forms.ImageField(label="select image", help_text="only .jpg or .png")
 
-    class Meta:
-        db_table = "prediction"
 
-    def __str__(self):
-        return self.file
+# https://stackoverflow.com/questions/25479254/in-django-restrict-image-file-upload-by-file-type
+def clean_image(self):
+    cleaned_data = super(ImageForm, self).clean()
+    photo = cleaned_data.get("photo")
+    if photo:
+        if not photo.name[-3:].lower() in ['jpg']:
+            raise forms.ValidationError("Your file extension was not recongized")
+    return photo

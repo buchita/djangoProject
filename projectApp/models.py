@@ -38,3 +38,12 @@ class Flower(models.Model):
 
 
 
+# file uploader
+class ImageForm(models.Model):
+    file = models.ImageField(upload_to='images/%Y/%m/%d')
+
+    # class Meta:
+    #     db_table = "prediction"
+
+    def __str__(self):
+        return self.file
