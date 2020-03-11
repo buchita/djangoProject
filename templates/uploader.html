@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Uploader</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+{#{% load crispy_forms_tags %}#}
+
+<div class="container">
+{##}
+{#            <!-- List of uploaded documents -->#}
+{#        {% if documents %}#}
+{#            <ul>#}
+{#                {% for document in documents %}#}
+{#                    <li><a href="{{ document.file }}"></a></li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+{#        {% else %}#}
+{#            <p>No documents.</p>#}
+{#        {% endif %}#}
+
+    <h1>Flower</h1>
+
+    <div class="jumbotron">
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url 'display' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.file }}
+            </p>
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+
+
+    </div>
+</div>
+</body>
+</html>
