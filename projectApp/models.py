@@ -39,9 +39,10 @@ class Flower(models.Model):
 
 
 # file uploader
-class ImageForm(models.Model):
+class ImageModel(models.Model):
     file = models.ImageField(upload_to='images/%Y/%m/%d')
-
+    # id = models.CharField(max_length=11, primary_key=True)
+    #
     # class Meta:
     #     db_table = "prediction"
 
