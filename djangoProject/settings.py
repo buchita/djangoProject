@@ -39,13 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'projectApp.apps.ProjectappConfig',
 
-
-    # 'crispy_forms', # for file uploader crispy-forms
+    'crispy_forms', # for file uploader crispy-forms
 
 
 ]
 # file uploader
-# CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,6 +82,7 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
+    # xampp
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -93,6 +93,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306', # look at xampp
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'id12887352_projectappdjango',  # name of db
+    #     'USER': 'id12887352_projectappdjango',
+    #     'PASSWORD': 'database',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',  # look at xampp
+    # }
 }
 
 
@@ -137,7 +145,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "projectApp/static")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-UPLOAD_TO = os.path.join(BASE_DIR, 'media/images')
+# UPLOAD_TO = os.path.join(BASE_DIR, 'media/images')
 
 # MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 # STATICFILES_DIRS = (
