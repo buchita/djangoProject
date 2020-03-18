@@ -7,38 +7,88 @@
 
 </head>
 <body>
-{#{% load crispy_forms_tags %}#}
+{% load crispy_forms_tags %}
 
 <div class="container">
-{##}
-{#            <!-- List of uploaded documents -->#}
-{#        {% if documents %}#}
-{#            <ul>#}
-{#                {% for document in documents %}#}
-{#                    <li><a href="{{ document.file }}"></a></li>#}
-{#                {% endfor %}#}
-{#            </ul>#}
-{#        {% else %}#}
-{#            <p>No documents.</p>#}
-{#        {% endif %}#}
-
     <h1>Flower</h1>
+    {#    <!-- List of uploaded documents -->#}
+    {#    {% if documents %}#}
+    {#        <ul>#}
+    {#            {% for document in documents %}#}
+    {#                <a href="{{ document.image }}"></a>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    {% else %}#}
+    {#        <p>No documents.</p>#}
+    {#    {% endif %}#}
+    {##}
 
     <div class="jumbotron">
-        <!-- Upload form. Note enctype attribute! -->
-        <form action="{% url 'display' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <p>{{ form.non_field_errors }}</p>
-            <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
-            <p>
-                {{ form.docfile.errors }}
-                {{ form.file }}
-            </p>
-            <p><input type="submit" value="Upload"/></p>
-        </form>
 
+
+        {% block content %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form|crispy}}
+                <button type="submit" class="btn btn-primary">Upload book</button>
+
+                {#                <p>{{ form.non_field_errors }}</p>#}
+                {#                <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>#}
+                {#                <p>#}
+                {#                    {{ form.docfile.errors }}#}
+                {#                    {{ form.file }}#}
+                {#                </p>#}
+                {#                <p><input type="submit" value="Upload"/></p>#}
+                {#                <img src="{{ image }}" class="image_responsive" height="100px" width="100px">#}
+                {#                                <p>this is a second oen</p>#}
+                {#                        <img  src="data:image/jpeg;base64,{{ image }}" width="50px">#}
+                {##}
+                {#                <img src="data:image/png;base64,{{image}}">#}
+
+            </form>
+
+        {% endblock %}
+
+
+
+        <!-- Upload form. Note enctype attribute! -->
+        {#    <form action="{% url 'uploader' %}" method="post" enctype="multipart/form-data">#}
+
+
+        {#        <form method="post" enctype="multipart/form-data">#}
+        {##}
+        {#            {% csrf_token %}#}
+        {#            <p>{{ form.non_field_errors }}</p>#}
+        {#            <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>#}
+        {#            <p>#}
+        {#                {{ form.docfile.errors }}#}
+        {#                {{ form.file }}#}
+        {#            </p>#}
+        {#            <p><input type="submit" value="Upload"/></p>#}
+        {#            <input src = '{{ img }}' type="text">#}
+        {##}
+        {#        </form>#}
+
+
+        {#        <form action="{% url "projectApp.views.upload_file" %}" method="POST" enctype="multipart/form-data">{% csrf_token %}#}
+        {#    <div class="file-field input-field left">#}
+        {#        <div class="btn black-text waves-effect waves-dark" style="background-color: #F5DF73">#}
+        {#            <div>Upload</div>#}
+        {#            <input type="file" name = "input_image" onchange="readURL(this);">#}
+        {#        </div>#}
+        {#    </div>#}
+        {#</form>#}
+        {#        <img src="{{ image }}" alt="this is image chosen">#}
 
     </div>
+    {#    <form method="post" enctype="multipart/form-data">#}
+    {#        {% csrf_token %}#}
+    {#        {{ form|crispy }}#}
+    {#                {{ form.as_p }}#}
+    {##}
+    {#        <button type="submit">Upload Image</button>#}
+    {#    </form>#}
 </div>
 </body>
 </html>

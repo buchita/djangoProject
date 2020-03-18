@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
-    <title>read data</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Display</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 </head>
 <body>
-{# <div class="container">#}
-{#    <div class="jumbotron">#}
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Displayyyy</h1>
+{#            <p>{{ obj.location }}</p>#}
+{#            <img src="{{ obj.file.url }}" alt="{{ obj.location }}">#}
+                        <p>{{ location }}</p>
+
+            <img src="data:image/jpeg;base64,{{ file }}">
+        </div>
+
+    </div>
+
+
+</body>
+</html>
+
 {#        {%  for flower in flowers %}#}
 {#            <h1>{{ flower.flowerName }}</h1>#}
 {##}
@@ -16,30 +31,7 @@
 {##}
 {#            <p>{{ flower.caption }}</p>#}
 {#        {% endfor %}#}
-{#    </div>#}
-{# </div>#}
-<div class="container">
-    <div class="jumbotron">
-        <h1>This is display page</h1>
-        <p>When the images saved in the storage then retrieve the result of the prediction and image.</p>
-
-    </div>
-</div>
 
 
-{#    <!-- List of uploaded documents -->#}
-{#    {% if documents %}#}
-{#        <ul>#}
-{#            {% for document in documents %}#}
-{#                <li><a href="{{ document.image }}"></a></li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% else %}#}
-{#        <p>No documents.</p>#}
-{#    {% endif %}#}
+{#<img src="media/images/{{ form.file }} " alt="what is this">#}
 
-
-
-
-</body>
-</html>
