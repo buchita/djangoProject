@@ -25,11 +25,11 @@ urlpatterns = [
 
     # links pages
     path('admin/', admin.site.urls),
-    path('', include('projectApp.urls')),
+    path(r'^$', include('projectApp.urls')),
     path("daisy/", views.DaisyInformation, name="daisyInformation"),
     path("beardediris/", views.BeardIrisInformation, name="beardedirisInformation"),
-    path('form/', views.upload_file, name="uploader"),
-    path('display/', views.display, name="display"),
+    path('flower/upload/', views.upload_file, name="uploader"),
+    path('flower/upload/display/', views.display, name="display"),
 
                   # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
     # path("viewflower/", views.readDB, name="readfromDB")

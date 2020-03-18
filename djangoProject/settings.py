@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
 ]
 # file uploader
-CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,13 +93,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306', # look at xampp
     }
+    # pythonanywhere
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'id12887352_projectappdjango',  # name of db
-    #     'USER': 'id12887352_projectappdjango',
+    #     'NAME': 'Buchita$projectAppDjango',  # name of db
+    #     'USER': 'Buchita',
     #     'PASSWORD': 'database',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',  # look at xampp
+    #     'HOST': 'Buchita.mysql.pythonanywhere-services.com',
+    #     'PORT': '3306',
     # }
 }
 
