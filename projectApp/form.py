@@ -3,8 +3,11 @@ from django import forms
 from .models import ImageModel
 
 
-class DocmentForm(forms.Form):
-    file = forms.ImageField(label="select image", help_text="only .jpg or .png")
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = ImageModel
+        fields = ('location', 'file')
+    #file = forms.ImageField(label="select image", help_text="only .jpg or .png")
 
 
 
@@ -12,7 +15,9 @@ class DocmentForm(forms.Form):
 def clean_image(self):
     cleaned_data = super(ImageModel, self).clean()
     photo = cleaned_data.get("photo")
+    tag = ['png', 'jpg']
+
     if photo:
-        if not photo.name[-3:].lower() in ['jpg']:
+        if not photo.name[-3:].lower() in tag:
             raise forms.ValidationError("Your file extension was not recongized")
     return photo

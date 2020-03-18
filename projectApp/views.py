@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 # from projectApp.templates.form import UserForm
 from projectApp.models import Flower, ImageModel
-from .form import DocmentForm
-
+from .form import DocumentForm
 
 from djangoProject import settings
 import base64
+
 
 def home(request):
     current_user = "Thomas"
@@ -36,46 +36,65 @@ def home(request):
         data_dict[key] = x
         index = index + 1
 
-
-
     return render(request, 'home.html',
                   data_dict)
 
-# write to db
+
+# # write to db
+# def upload_file(request):
+#     # return HttpResponse(index_home)
+#     # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
+#     # creates a request for POST
+#     if request.method == "POST":
+#         form = DocmentForm(request.POST, request.FILES)
+#         # form is validated
+#         # if form.is_valid():
+#         try:
+#             newdoc = ImageModel(file=request.FILES['file'])
+#             # form is saved
+#             newdoc.save()
+#
+#             # then redirected to /view
+#             # return HttpResponseRedirect('/success/url/')
+#             return HttpResponseRedirect('/home/')
+#
+#         except:
+#             pass
+#     # if something is wrong, will be directed back to html page
+#     else:
+#         # empty
+#         form = DocmentForm()
+#
+#     # Load documents for the list page
+#     documents = ImageModel.objects.all()
+#     return render(request, 'uploader.html', {'documents': documents, 'form': form})
+
+
 def upload_file(request):
-    # return HttpResponse(index_home)
-    # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
-    # creates a request for POST
-    if request.method == "POST":
-        form = DocmentForm(request.POST, request.FILES)
-
-        # form is validated
-        # if form.is_valid():
-        try:
-            newdoc = ImageModel(file=request.FILES['file'])
-            # form is saved
-            newdoc.save()
-
-            # then redirected to /view
-            # return HttpResponseRedirect('/success/url/')
-            return HttpResponseRedirect('/home/')
-
-        except:
-            pass
-    # if something is wrong, will be directed back to html page
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('display/')
     else:
-        # empty
-        form = DocmentForm()
-
-    # Load documents for the list page
-    documents = ImageModel.objects.all()
-    return render(request, 'uploader.html', {'documents': documents, 'form': form})
+        # if its a get method
+        # empty form to b filled in
+        form = DocumentForm()
+    return render(request, 'uploader.html', {
+        'form': form
+    })
 
 
 def display(request):
-    documents = ImageModel.objects.all()
+    # files = ImageModel.objects.all()
+    obj = ImageModel.objects.get(id=8)
+    img = base64.b64encode(obj.file).decode()
+    data = {
+        'location': obj.location,
+        'file': img
+    }
+    return render(request, 'display.html', data)
 
-    return render(request, 'display.html', {'documents': documents})
 
 
 def DaisyInformation(request):
@@ -110,9 +129,6 @@ def BeardIrisInformation(request):
     return render(request, 'beardediris.html', data)
 
 
-
-
 def readDB(request):
     flowers = Flower.objects.all()
     return render(request, 'display.html', {'flowers': flowers})
-

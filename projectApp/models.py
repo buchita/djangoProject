@@ -11,6 +11,7 @@ class Flower(models.Model):
     # id = models.IntegerField(default=0)
 
     # img = models.ImageField(upload_to='flower_folder', default='')
+
     # blob
     img = models.TextField(null=True)
 
@@ -40,11 +41,13 @@ class Flower(models.Model):
 
 # file uploader
 class ImageModel(models.Model):
+    location = models.CharField(max_length=20)
     file = models.ImageField(upload_to='images/%Y/%m/%d')
+
     # id = models.CharField(max_length=11, primary_key=True)
     #
-    # class Meta:
-    #     db_table = "prediction"
+    class Meta:
+        db_table = "prediction"
 
     def __str__(self):
-        return self.file
+        return self.location
