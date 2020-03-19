@@ -26,12 +26,21 @@ urlpatterns = [
     # links pages
     path('admin/', admin.site.urls),
     path('', include('projectApp.urls')),
-    path("daisy/", views.DaisyInformation, name="daisyInformation"),
-    path("beardediris/", views.BeardIrisInformation, name="beardedirisInformation"),
-
-                  # path("UserRegistration/", views.UserFormView, name="UserRegistration"),
+    path("flower/daisy/", views.DaisyInformation, name="daisyInformation"),
+    path("flower/blanketFlower/", views.BlanketFlower, name="blanketflower"),
+    path("flower/buttercup/", views.Buttercup, name="buttercup"),
+    path("flower/carnation/", views.Carnation, name="carnation"),
+    path("flower/dandelion/", views.Dandelion, name="dandelion"),
+    path("flower/cornpoppy/", views.CornPoppy, name="cornpoppy"),
+    path("flower/lotus/", views.Lotus, name="lotus"),
+    path("flower/marigold/", views.Marigold, name="marigold"),
+    path("flower/sunflower/", views.Sunflower, name="sunflower"),
+    path("flower/rose/", views.Rose, name="rose"),
+    path('flower/upload/', views.upload_file, name="uploader"),
+    # path('flower/upload/display/', views.upload_file, name="display"),
     # path("viewflower/", views.readDB, name="readfromDB")
 
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
