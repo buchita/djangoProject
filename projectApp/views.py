@@ -1,13 +1,16 @@
+import os
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-# from projectApp.templates.form import UserForm
-from projectApp.models import Flower
+
+from projectApp.models import Flower, TrainModel
+
 # from .form import DocumentForm
 from django.core.files.storage import FileSystemStorage
-from projectApp.MachineLearning.image_quality_assessment import image_quality
+from projectApp.MachineLearning import image_quality_assessment, random_forest #import image_quality
 from djangoProject import settings
 import base64
-
+# from .MachineLearning.random_forest import classifier
 
 def home(request):
     obj1 = Flower.objects.get(id=1)
@@ -126,28 +129,51 @@ def upload_file(request):
     # basic file upload
 
 
+    # this is the path to sace the image to /media/images directory
+    image_root = os.path.join(settings.MEDIA_ROOT, 'images/')
+
+    # this is for accessing the image after saved
+    image_url = os.path.join(settings.MEDIA_URL, 'images/')
+
+    # remove the \\ to /
+    # image_root = image_root.replace("\\", "/")
     context = {}
     # when submitted
+    # https://github.com/sibtc/django-upload-example/blob/master/mysite/core/views.py
     if request.method == 'POST':
         uploaded_file = request.FILES['document']
-        fs = FileSystemStorage()
+        fs = FileSystemStorage(location=image_root, base_url=image_url)
         name = fs.save(uploaded_file.name, uploaded_file)
-        context['url'] = fs.url(name)
-        print(context['url'])
-        image_quality(context['url'])
+    #---------------------------------------------------
+        uploade_url = image_url + name
+
+        url = fs.url(name)
+        print(url)
+        print(uploade_url)
+        # print("current directory")
+        # print(os.getcwd())
+        result = image_quality_assessment.image_quality(url)
+        predict_result, percent = random_forest.classifier(url)
+
+        context = { 'url': url, 'result': result, 'predict_result': predict_result, 'percent': percent}
+
     return render(request, 'uploader.html', context)
 
 
-# def display(request):
-#     # files = ImageModel.objects.all()
-#     obj = ImageModel.objects.get(id=8)
-#     img = base64.b64encode(obj.file).decode()
-#     data = {
-#         'location': obj.location,
-#         'file': img
-#     }
-#     return render(request, 'display.html', data)
-#
+def display(request):
+    im_ar = []
+    for i in TrainModel.objects.all():
+        image_data = ""
+        print(i.id)
+        image_data = base64.b64encode(i.image_dataset).decode()
+        # print(image_data)
+        image_quality_assessment.stringToRGB(image_data)
+        im_ar.append(image_data)
+
+
+
+    return render(request, 'display.html', {'flowers': im_ar})
+
 
 
 # this is the beginning of the reading flower from the database
