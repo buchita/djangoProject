@@ -4,18 +4,20 @@
 
     <meta charset="UTF-8">
     <title>Display</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 </head>
 <body>
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Displayyyy</h1>
-            <p>Uploaded file: <a href="{{ url }}">{{ url }}</a></p>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Display</h1>
+        {% for f in flowers %}
+            <img src="data:image/jpeg;base64,{{ f }}" alt="this is the image">
 
-        </div>
-
+        {% endfor %}
     </div>
+
+</div>
 
 
 </body>
