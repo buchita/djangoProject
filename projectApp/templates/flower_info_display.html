@@ -2,8 +2,11 @@
 
 
 {% block content %}
-    <div class="jumbotron">
-        <h1>Display</h1>
+        <div class="jumbotron">
+{#        <div class="spinner-border" role="status">#}
+{#  <span class="sr-only">Loading...</span>#}
+{#</div>#}
+
             <img src="data:image/jpeg;base64,{{ image }}" class="responsive">
             <h2><b>Name: </b></h2>
             <p>{{ name }}</p>
@@ -23,15 +26,7 @@
             <h2><b>Facts: </b></h2>
             <p>{{ tips }}</p>
 
-
-            {#if there is no return#}
-{#            {% empty %}#}
-{#                <p>No match</p>#}
-{#        {% endfor %}#}
-{##}
-
-    </div>
-
+        </div>
 
 
 {% endblock %}
