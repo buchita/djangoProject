@@ -22,10 +22,10 @@ def image_quality(image_path):
     # image.show()
     result = brisque.score(image)
 
-    print(result)
-    print("this is the path")
-    print(type(path))
-    print(path)
+    # print(result)
+    # print("this is the path")
+    # print(type(path))
+    # print(path)
     # lower the number  = less pixelated
     # however, the blurry images do not work in this
     return result
@@ -38,12 +38,6 @@ def stringToRGB(base64_string):
     imgdata = base64.b64decode(str(base64_string))
     image = Image.open(io.BytesIO(imgdata))
 
-    jpg = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
+    numpy_image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
 
-    print(type(jpg))
-    # cv2.imwrite('color_img.jpg', jpg)
-    # cv2.imshow("image", jpg);
-
-    # cv2.imshow('image', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    return numpy_image

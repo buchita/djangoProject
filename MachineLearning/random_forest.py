@@ -18,55 +18,64 @@ import tensorflow as tf
 from keras.preprocessing import image
 import pickle
 import cv2
+import itertools
+import threading
+import time
+import sys
 
-
+WIDTH = 200
+HEIGHT = 200
 
 # this function is taken from this reference to load images from local directory and return as a bunch
 # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
-def load_image_files(container_path, dimension=(96, 96, 3)):
+def load_image_files(dataset_target, dataset_numpy, dimension=(WIDTH, HEIGHT, 3)):
+    flat_data1 = []
 
-    image_dir = Path(container_path)
-    folders = [directory for directory in image_dir.iterdir()
-               if directory.is_dir()]
-    # categories = [fo.name for fo in folders]
+    for image in dataset_numpy:
+        img_resized = transform.resize(image, dimension, anti_aliasing=True, mode='reflect')
 
-    images = []
-    flat_data = []
-    target = []
-    for i, direc in enumerate(folders):
-        print(i)
-        for file in direc.iterdir():
-            print(file)
-            img = io.imread(str(file))
-            img_resized = transform.resize(img, dimension, anti_aliasing=True, mode='reflect')
-            flat_data.append(img_resized.flatten())
-            # images.append(img_resized)
-            target.append(i)
-    flat_data = np.array(flat_data)
-    target = np.array(target)
-    # images = np.array(images)
+        # print("this is teh resized")
+        # print(img_resized)
 
-    return utils.Bunch(data=flat_data,
-                 target=target)#,
-                 # target_names=categories,
-                 # images=images,
-                 # DESCR=descr)
+        flat_data1.append(img_resized.flatten())
+
+        # # print(flat_data1)
+        # target1.append(key)
+
+    flat_data1 = np.array(flat_data1)
+    target1 = np.array(dataset_target)
+
+    return utils.Bunch(data=flat_data1,
+                 target=target1)
 
 
-def classifier(predict_imag_path):
-    sourceDir = r"C:\Users\buchi\OneDrive - Technological University Dublin\DT211c4\Dissertation\Dataset"
+def classifier(predict_imag_path, dataset_target, dataset_numpy):
+    # sourceDir = r"C:\Users\buchi\OneDrive - Technological University Dublin\DT211c4\Dissertation\Dataset"
     # root = "/djangoProject"
     # path = root + "/images/"
     # sourceDir = path
     # load dataset from the directory
-    image_dataset = load_image_files(sourceDir)
+    label = ["Barbeton Daisy", "Blanket Flower", "Buttercup", "Carnation", "Common Dandelion",
+             "Corn Poppy", "Lotus", "Marigold", "Rose", "Sunflower"]
+
+
+
+    image_dataset = load_image_files(dataset_target, dataset_numpy)
+    # image_dataset = load_image_files(sourceDir)
+    # print("this is the dataset")
+    # print(image_dataset)
+    # print("this is the value in teh dictionary")
+    # tar = image_dataset.target
+    # print(len(tar))
+    # for i in tar:
+    #     print(i)
+
 
     # split data into 70% training, 30% testing
     X_train, X_test, y_train, y_test = model_selection.train_test_split(
         image_dataset.data, image_dataset.target, test_size=0.3, random_state=109)
 
     scaler = preprocessing.StandardScaler()
-
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
@@ -97,27 +106,41 @@ def classifier(predict_imag_path):
     print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
     print('Accuracy of Random Forest classifier on test set: {:.2f}'.format(rf.score(X_test, y_test)))
     percent = rf.score(X_test, y_test)
-
+    percent = percent*100
 
 
     begin = cv2.os.getcwd()
     image_root = begin.replace("\\", "/")
 
+
+
     path = image_root + predict_imag_path
+
     # path = predict_imag_path
+    # path = r"C:\Users\buchi\OneDrive - Technological University Dublin\DT211c4\Dissertation\Dataset\blanket flower\test_image.jpg"
+
     flat_data1 = []
-    dimension = 96, 96
+    dimension = WIDTH, HEIGHT
     img = io.imread(path)
     img_resized = transform.resize(img, dimension, anti_aliasing=True, mode='reflect')
     flat_data1.append(img_resized.flatten())
 
     result = rf.predict(flat_data1)
     print(result)
+    # print("Accuracy:",metrics.accuracy_score(y_test, result))
+    # m = metrics.accuracy_score(y_test, result)
+    # done = True
+    result = list(result)
+    index = (int(result[0]))
+    index = index-1
+    name = label[index]
 
-    return result, percent
+    return name, percent
 
 
 # root = "/djangoProject"
-# path = root + "/images/daisy/g1.jpg"
+# path = root + "/images/daisy/test_image.jpg"
+
+#
 # path = r"C:\Users\buchi\OneDrive - Technological University Dublin\DT211c4\Dissertation\Dataset\sunflower\square-1460724927-orange-sunflower.jpg"
-# classifier(path)
+# classifier(path, "something")
