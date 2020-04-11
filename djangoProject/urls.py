@@ -37,8 +37,7 @@ urlpatterns = [
     path("flower/sunflower/", views.Sunflower, name="sunflower"),
     path("flower/rose/", views.Rose, name="rose"),
     path('flower/upload/', views.upload_file, name="uploader"),
-    path('display/', views.display, name="display"),
-    # path("viewflower/", views.readDB, name="readfromDB")
+    path('display/', views.filter, name="display"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
