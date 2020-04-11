@@ -3,16 +3,20 @@ import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
+
 from projectApp.models import Flower, TrainModel
 
-# from .form import DocumentForm
+
 from django.core.files.storage import FileSystemStorage
-from projectApp.MachineLearning import image_quality_assessment, random_forest #import image_quality
+from projectApp.MachineLearning import image_quality_assessment, random_forest, dataset_filter
 from djangoProject import settings
 import base64
-# from .MachineLearning.random_forest import classifier
+
+
 
 def home(request):
+
+
     obj1 = Flower.objects.get(id=1)
     # obj = Flower.objects.all()
     image_data1 = base64.b64encode(obj1.image).decode()
@@ -113,66 +117,116 @@ def home(request):
 
 # https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/
 def upload_file(request):
-    # using form and model
-    # if request.method == 'POST':
-    #     form = DocumentForm(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('display/')
-    # else:
-    #     # if its a get method
-    #     # empty form to b filled in
-    #     form = DocumentForm()
-    # return render(request, 'uploader.html', {
-    #     'form': form
-    # })
-    # basic file upload
-
-
-    # this is the path to sace the image to /media/images directory
+    # this is the path to save the image to /media/images directory
     image_root = os.path.join(settings.MEDIA_ROOT, 'images/')
 
     # this is for accessing the image after saved
     image_url = os.path.join(settings.MEDIA_URL, 'images/')
-
-    # remove the \\ to /
-    # image_root = image_root.replace("\\", "/")
     context = {}
+    extension = ".jpg"
     # when submitted
     # https://github.com/sibtc/django-upload-example/blob/master/mysite/core/views.py
     if request.method == 'POST':
-        uploaded_file = request.FILES['document']
-        fs = FileSystemStorage(location=image_root, base_url=image_url)
-        name = fs.save(uploaded_file.name, uploaded_file)
-    #---------------------------------------------------
-        uploade_url = image_url + name
+        # if file is selected
+        if len(request.FILES) != 0:
 
-        url = fs.url(name)
-        print(url)
-        print(uploade_url)
-        # print("current directory")
-        # print(os.getcwd())
-        result = image_quality_assessment.image_quality(url)
-        predict_result, percent = random_forest.classifier(url)
+            uploaded_file = request.FILES['document']
+            print(uploaded_file)
 
-        context = { 'url': url, 'result': result, 'predict_result': predict_result, 'percent': percent}
+            # check if the file ends with jpg
+            if str(uploaded_file).endswith(extension):
+                # print("this ends with jpg")
+
+
+                fs = FileSystemStorage(location=image_root, base_url=image_url)
+                name = fs.save(uploaded_file.name, uploaded_file)
+                #---------------------------------------------------
+                # uploade_url = image_url + name
+
+                url = fs.url(name)
+                # print(url)
+                # print(uploade_url)
+
+                result = image_quality_assessment.image_quality(url)
+                tag_name = dataset_filter.filer(url)
+                base64_im_ar = []
+                dataset_target = []
+                dataset_numpy = []
+                # print("View ",tag_name)
+
+                # if list of matched RGB is empty
+                if not tag_name:
+                    print("not statement, empty")
+                    for i in TrainModel.objects.all():
+                        image_data = ""
+                        image_data = base64.b64encode(i.image_dataset).decode()
+                        base64_im_ar.append(image_data)
+
+                        # convert from base 64 to numpy
+                        numpy_arr_image = image_quality_assessment.stringToRGB(image_data)
+                        dataset_target.append(i.id)
+                        dataset_numpy.append(numpy_arr_image)
+                # if there is some matching from RGB
+                else:
+                    for i in TrainModel.objects.all():
+                        for j in tag_name:
+                            if i.id == j:
+
+                                print(i.image_id)
+                                image_data = ""
+                                image_data = base64.b64encode(i.image_dataset).decode()
+                                base64_im_ar.append(image_data)
+
+                                # convert from base 64 to numpy
+                                numpy_arr_image = image_quality_assessment.stringToRGB(image_data)
+                                dataset_target.append(i.id)
+                                dataset_numpy.append(numpy_arr_image)
+
+                predict, percent = random_forest.classifier(url, dataset_target, dataset_numpy)
+
+                context = { 'url': url, 'result': result, 'predict': predict, 'percent': percent}
+            else:
+                error_text = "Only jpg extension is accepted"
+                context = {'error_text': error_text}
+        # if file is not selected
+        else:
+            print("no file selecteddddd+++++++++++++++++++++++++++")
+            no_file = "No image is selected. Please select an image"
+            context = {'no_file': no_file}
 
     return render(request, 'uploader.html', context)
 
 
-def display(request):
-    im_ar = []
-    for i in TrainModel.objects.all():
-        image_data = ""
-        print(i.id)
-        image_data = base64.b64encode(i.image_dataset).decode()
-        # print(image_data)
-        image_quality_assessment.stringToRGB(image_data)
-        im_ar.append(image_data)
+def filter(request):
+    if request.method == "GET":
+        try:
+            keyword = request.GET.get('searchkeyword')
+            keyword = keyword.lower()
+            # for i in Flower.objects.all().filter(name=keyword):
+            for i in Flower.objects.all().filter(name=keyword):
+                print(i.id)
+                image_data = base64.b64encode(i.image).decode()
+
+                filtered = {
+                    'description': i.description,
+                    'name': i.name,
+                    'image': image_data,
+                    'planting': i.planting,
+                    'meaning': i.meaning,
+                    'care_information': i.care_information,
+                    'disease': i.disease,
+                    'tips': i.tips
+                }
 
 
+        except Flower.DoesNotExist:
+            filtered = "this doesnt exist"
 
-    return render(request, 'display.html', {'flowers': im_ar})
+    return render(request, 'display.html', filtered)
+
+
+# def testing(request):
+#
 
 
 
@@ -187,10 +241,15 @@ def DaisyInformation(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'daisyInformation.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def BlanketFlower(request):
@@ -203,10 +262,15 @@ def BlanketFlower(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'blanketFlower.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Buttercup(request):
@@ -217,10 +281,15 @@ def Buttercup(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'buttercup.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 
@@ -232,10 +301,15 @@ def Carnation(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'carnation.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Dandelion(request):
@@ -246,10 +320,15 @@ def Dandelion(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'carnation.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def CornPoppy(request):
@@ -260,10 +339,15 @@ def CornPoppy(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'carnation.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Lotus(request):
@@ -274,10 +358,15 @@ def Lotus(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'lotus.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Marigold(request):
@@ -288,10 +377,15 @@ def Marigold(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'marigold.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Sunflower(request):
@@ -302,10 +396,15 @@ def Sunflower(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'sunflower.html', data)
+    return render(request, 'flower_info_display.html', data)
 
 
 def Rose(request):
@@ -316,7 +415,12 @@ def Rose(request):
     data = {
         'description': obj.description,
         'name': obj.name,
-        'image': image_data
+        'image': image_data,
+        'planting': obj.planting,
+        'meaning': obj.meaning,
+        'care_information': obj.care_information,
+        'disease': obj.disease,
+        'tips': obj.tips
     }
     # flowers = Flower.objects.all()
-    return render(request, 'rose.html', data)
+    return render(request, 'flower_info_display.html', data)
